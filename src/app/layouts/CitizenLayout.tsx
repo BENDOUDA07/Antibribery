@@ -2,10 +2,13 @@ import { Outlet, useNavigate, useLocation } from 'react-router';
 import { ShieldCheck, User, LogOut } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
+import { useLanguage } from '../../contexts/LanguageContext';
+import SimpleLanguageSwitcher from '../components/SimpleLanguageSwitcher';
 
 export function CitizenLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
 
   const handleLogout = () => {
     navigate('/');
@@ -24,16 +27,17 @@ export function CitizenLayout() {
               </div>
               <div>
                 <h1 className="text-lg font-semibold text-[#1a3a5c]" style={{ fontWeight: 600 }}>
-                  منصة الإبلاغ
+                  {t("app.title")}
                 </h1>
               </div>
             </div>
 
-            {/* Authenticated User */}
+            {/* Authenticated User & Language Switcher */}
             <div className="flex items-center gap-4">
+              <SimpleLanguageSwitcher />
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-[#639922] rounded-full animate-pulse" />
-                <span className="text-sm text-gray-600 hidden sm:inline">Authenticated</span>
+                <span className="text-sm text-gray-600 hidden sm:inline">{t("common.authenticated")}</span>
               </div>
               <Avatar className="w-9 h-9 bg-[#1a3a5c]">
                 <AvatarFallback className="bg-[#1a3a5c] text-white">

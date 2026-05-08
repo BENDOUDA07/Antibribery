@@ -1,23 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { CreditCard, ShieldCheck, Globe, Phone } from 'lucide-react';
+import { CreditCard, ShieldCheck, Phone } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
 import { MoroccanPattern } from '../components/MoroccanPattern';
+import { useLanguage } from '../../contexts/LanguageContext';
+import SimpleLanguageSwitcher from '../components/SimpleLanguageSwitcher';
 
 export function LoginScreen() {
-  const [language, setLanguage] = useState<'ar' | 'fr'>('ar');
+  const { t } = useLanguage();
   const [cinNumber, setCinNumber] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otpValue, setOtpValue] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const navigate = useNavigate();
-
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'ar' ? 'fr' : 'ar');
-  };
 
   const handleSendOTP = () => {
     // Mock OTP sending - in real app would send OTP via SMS
@@ -39,49 +37,14 @@ export function LoginScreen() {
     }
   };
 
-  const text = {
-    ar: {
-      platformName: 'منصة الإبلاغ عن الرشوة',
-      platformSubtitle: 'المملكة المغربية',
-      cinLabel: 'رقم البطاقة الوطنية',
-      cinPlaceholder: 'أدخل رقم البطاقة الوطنية',
-      phoneLabel: 'رقم الهاتف',
-      phonePlaceholder: 'أدخل رقم الهاتف',
-      sendOtpBtn: 'إرسال رمز التحقق',
-      otpLabel: 'رمز التحقق (OTP)',
-      otpSentMessage: 'تم إرسال رمز التحقق إلى رقم هاتفك',
-      authenticateBtn: 'تسجيل الدخول الآمن',
-      trustMessage: 'هويتك محمية قانونيًا ولن يتم الكشف عنها للطرف المتهم.',
-    },
-    fr: {
-      platformName: 'Plateforme Anti-Corruption',
-      platformSubtitle: 'Royaume du Maroc',
-      cinLabel: 'Numéro CIN',
-      cinPlaceholder: 'Entrez votre numéro CIN',
-      phoneLabel: 'Numéro de téléphone',
-      phonePlaceholder: 'Entrez votre numéro de téléphone',
-      sendOtpBtn: 'Envoyer le code OTP',
-      otpLabel: 'Code de vérification (OTP)',
-      otpSentMessage: 'Le code de vérification a été envoyé à votre numéro',
-      authenticateBtn: 'Authentification Sécurisée',
-      trustMessage: 'Votre identité est légalement protégée et ne sera jamais divulguée à la partie accusée.',
-    },
-  };
-
-  const t = text[language];
-
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-[#1a3a5c] overflow-hidden">
       <MoroccanPattern />
       
-      {/* Language Switcher */}
-      <button
-        onClick={toggleLanguage}
-        className="absolute top-6 right-6 z-10 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors backdrop-blur-sm"
-      >
-        <Globe className="w-4 h-4" />
-        <span className="font-medium">{language === 'ar' ? 'FR' : 'AR'}</span>
-      </button>
+      {/* Language Switcher - positioned in top right corner */}
+      <div className="absolute top-6 right-6 z-10">
+        <SimpleLanguageSwitcher />
+      </div>
 
       {/* Login Card */}
       <div className="relative z-10 w-full max-w-md mx-4">
@@ -92,23 +55,23 @@ export function LoginScreen() {
               <ShieldCheck className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-semibold text-[#1a3a5c] mb-1" style={{ fontWeight: 600 }}>
-              {t.platformName}
+              {t("login.platformName")}
             </h1>
-            <p className="text-sm text-gray-600">{t.platformSubtitle}</p>
+            <p className="text-sm text-gray-600">{t("login.platformSubtitle")}</p>
           </div>
 
           {/* CIN Input */}
           <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="cin" className="text-[#1a3a5c]">
-                {t.cinLabel}
+                {t("login.cinLabel")}
               </Label>
               <div className="relative">
                 <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="cin"
                   type="text"
-                  placeholder={t.cinPlaceholder}
+                  placeholder={t("login.cinPlaceholder")}
                   value={cinNumber}
                   onChange={(e) => setCinNumber(e.target.value)}
                   className="pl-11 h-12 border-gray-300 focus:border-[#1a3a5c] focus:ring-[#1a3a5c]"
@@ -120,14 +83,14 @@ export function LoginScreen() {
             {/* Phone Number Input */}
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-[#1a3a5c]">
-                {t.phoneLabel}
+                {t("login.phoneLabel")}
               </Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder={t.phonePlaceholder}
+                  placeholder={t("login.phonePlaceholder")}
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="pl-11 h-12 border-gray-300 focus:border-[#1a3a5c] focus:ring-[#1a3a5c]"
@@ -144,7 +107,7 @@ export function LoginScreen() {
                 className="w-full h-12 bg-[#1a3a5c] hover:bg-[#2a4a6c] text-white"
                 style={{ fontWeight: 500 }}
               >
-                {t.sendOtpBtn}
+                {t("login.sendOtpBtn")}
               </Button>
             )}
 
@@ -152,12 +115,12 @@ export function LoginScreen() {
             {otpSent && (
               <>
                 <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 text-center">
-                  <p className="text-sm text-blue-900">{t.otpSentMessage}</p>
+                  <p className="text-sm text-blue-900">{t("login.otpSentMessage")}</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="otp" className="text-[#1a3a5c]">
-                    {t.otpLabel}
+                    {t("login.otpLabel")}
                   </Label>
                   <div className="flex justify-center">
                     <InputOTP
@@ -184,7 +147,7 @@ export function LoginScreen() {
                   className="w-full h-12 bg-[#1a3a5c] hover:bg-[#2a4a6c] text-white"
                   style={{ fontWeight: 500 }}
                 >
-                  {t.authenticateBtn}
+                  {t("login.authenticateBtn")}
                 </Button>
               </>
             )}
@@ -193,7 +156,7 @@ export function LoginScreen() {
             <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
               <ShieldCheck className="w-5 h-5 text-[#639922] flex-shrink-0 mt-0.5" />
               <p className="text-xs text-gray-700 leading-relaxed">
-                {t.trustMessage}
+                {t("login.trustMessage")}
               </p>
             </div>
           </div>

@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { MapPin, TrendingUp, AlertTriangle } from 'lucide-react';
+import { MapPin, TrendingUp, AlertTriangle, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { StreetViewModal } from '../components/StreetViewModal';
+import { useLanguage } from '../../contexts/LanguageContext';
 import moroccoMapImg from 'figma:asset/2a383796fc6d6c45f79cdf6be15eb05b70861d3b.png';
 
 const regionData = [
@@ -92,11 +95,19 @@ const regionColors = {
 };
 
 export function MapView() {
+  const { t } = useLanguage();
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<typeof regionData[0] | null>(null);
+  const [streetViewRegion, setStreetViewRegion] = useState<typeof regionData[0] | null>(null);
+  const [isStreetViewOpen, setIsStreetViewOpen] = useState(false);
 
   const handleRegionClick = (region: typeof regionData[0]) => {
     setSelectedRegion(region);
+  };
+
+  const handleStreetViewClick = (region: typeof regionData[0]) => {
+    setStreetViewRegion(region);
+    setIsStreetViewOpen(true);
   };
 
   const totalReports = regionData.reduce((sum, region) => sum + region.reports, 0);
@@ -371,6 +382,15 @@ export function MapView() {
                   </div>
                 </div>
 
+                <Button
+                  onClick={() => handleStreetViewClick(selectedRegion)}
+                  className="w-full bg-[#1a3a5c] hover:bg-[#2a4a6c] text-white"
+                  style={{ fontWeight: 500 }}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  {t("streetview.viewButton")}
+                </Button>
+
                 <div>
                   <p className="text-sm text-gray-600 mb-2">Major Cities</p>
                   <div className="space-y-2">
@@ -405,6 +425,13 @@ export function MapView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Street View Modal */}
+      <StreetViewModal
+        isOpen={isStreetViewOpen}
+        onClose={() => setIsStreetViewOpen(false)}
+        region={streetViewRegion}
+      />
     </div>
   );
 }
